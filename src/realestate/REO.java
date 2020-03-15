@@ -99,7 +99,8 @@ public class REO {
             } // end of switch (in)
         } // end of while (!done)
     } // end of addListingMenu(Scanner sc)
-
+    
+    /* This method prompts the user to add a Residential object into the REO listings */
     private static void addResidence(String type, Scanner sc) {
         System.out.print("\nPlease enter the street address for the residence: ");
         String address = sc.nextLine();
@@ -114,22 +115,31 @@ public class REO {
         // Residence Type-specific promptings
         if (type.equals("HOUSE")) {
             double yardAcr = getNum("Please enter the size of the yard in acres: ", "Invalid number.", sc);
+            
             House h = new House(address, zip, bedrooms, bathrooms, sqrFt, yardAcr);
             listings.addListing(address, h);
+            
             System.out.printf("Appraisal Price for this property is: $%,.2f\n", h.calculateAppraisalPrice());
+            
             double listPrice = getNum("Please enter the List Price for the property: $", "Invalid number", sc);
+            
             h.setListPrice(listPrice);
         } // end of if (type.equals("HOUSE")
         else if (type.equals("CONDO")) {
             int floorLvl = (int) getNum("Please enter the floor level of the condo: ", "Invalid number.", sc);
+            
             Condo c = new Condo(address, zip, bedrooms, bathrooms, sqrFt, floorLvl);
             listings.addListing(address, c);
+            
             System.out.printf("Appraisal Price for this property is: $%,.2f\n", c.calculateAppraisalPrice());
+            
             double listPrice = getNum("Please enter the List Price for the property: $", "Invalid number", sc);
+            
             c.setListPrice(listPrice);
         } // end of else if (type.equals("CONDO")
     } // end of addResidence(String type, Scanner sc)
 
+    /* This method auto populates the REO listings with 8 pre-defined Residential objects */
     private static void autoPopulate() {
         int currentSize = listings.getListingCount();
 
@@ -167,7 +177,8 @@ public class REO {
 
         System.out.println("\n" + (listings.getListingCount() - currentSize) + " listings were auto-generated.");
     } // end of autoPopulate()
-
+    
+    /* This method takes no arguments, and prints all of the residences in a formatted manner */
     private static void showListings() {
         int counter = 1;
         System.out.println();
@@ -212,6 +223,7 @@ public class REO {
         } // end of while (!done)
     } // end of bidsMenu(Scanner sc)
 
+    /* This method prints a menu for current listings, and maps the options for the bids module */
     private static HashMap<String, String> currentListingsMenu() {
         HashMap<String, String> menu = new HashMap<String, String>();
         int option = 1;
@@ -227,8 +239,9 @@ public class REO {
 
         System.out.println("ENTER: Exit back to previous menu\n");
         return menu;
-    }
-    // todo: bids module
+    } // end of currentListingsMenu()
+
+    /* This method takes a Scanner as a argument, and adds a new bid to a listing chosen by the user */
     private static void newBid(Scanner sc) {
         HashMap<String, String> menu;
         boolean done = false;
@@ -258,10 +271,12 @@ public class REO {
                 listing.newBid(name, bid);
 
                 System.out.printf("\nNew bid for property for '%s' added\n\n", listing.getStreetAddress());
+                
             } // end of else
         } // end of while (!done)
     } // end of newBid(Scanner sc)
 
+    /* This method takes a Scanner as a argument, and prints the current bids for a specific listing chosen by the user */
     private static void showBids(Scanner sc) {
         HashMap<String, String> menu;
         boolean done = false;
@@ -290,11 +305,14 @@ public class REO {
                 for (String bidder : listing.getBidders()) {
                     System.out.printf("%-15s $%,10.2f\n", bidder, listing.getBid(bidder));
                 } // end of for (String bidder : listing.getBidders())
+                
                 System.out.println("\n");
+                
             } // end of else
         } // end of while (!done)
     } // end of showBids()
 
+    /* This method takes no arguments, and auto generates bids for each listing in the listings map */
     private static void autoBids() {
         Random rd = new Random();
 
@@ -318,18 +336,27 @@ public class REO {
                 "Colm Meaney",
                 "Michelle Forbes"
         }; // end of autoBidders
+        
         System.out.println("\n");
         for (Residential prop : listings.getResidences()) {
             int qtyBids = rd.nextInt(5) + 1;
+            int existingBids = prop.getBidCount();
+            
             for (int i = 0; i < qtyBids; i++) {
                 int nameIndex = rd.nextInt((autoBidders.length - 1) + 1);
                 double rate = rd.nextInt(10) / 100f;
                 prop.newBid(autoBidders[nameIndex], prop.calculateAppraisalPrice() * (1 + rate));
             } // end of for (int i = 0; i < qtyBids; i++)
-            System.out.println(qtyBids + " new bids have been added to listing " + prop.getStreetAddress() + ".");
+            
+            System.out.println((prop.getBidCount() - existingBids) + " new bids have been added to listing " + prop.getStreetAddress() + ".");
+            
         } // end of for (Residential prop : listings.getResidences())
     } // end of autoBids()
 
+    /* 
+     * This method takes two strings and a Scanner as arguments. It will prompt the user for a number, validate the input and return
+     * a parsed to Double version of the input. 
+     */
     private static double getNum(String prompt, String warning, Scanner sc) {
         double num;
 
@@ -353,6 +380,8 @@ public class REO {
         while (!done) {
             done = mainMenu(sc);
         } // end of while (!done)
+        
         sc.close();
+        
     } // end of main(String[] args)
 } // end of REO
