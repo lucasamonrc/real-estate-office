@@ -303,7 +303,7 @@ public class REO {
                 System.out.println("--------------------------------------");
 
                 for (String bidder : listing.getBidders()) {
-                    System.out.printf("%-15s $%,10.2f\n", bidder, listing.getBid(bidder));
+                    System.out.printf("%-24s $%,10.2f\n", bidder, listing.getBid(bidder));
                 } // end of for (String bidder : listing.getBidders())
                 
                 System.out.println("\n");
